@@ -1,0 +1,19 @@
+## Local Development
+
+1. mvn spring-boot:run
+
+mvn spring-boot:run -Dport=7060 -Dmgmt-port=7061 -Dspring.cloud.config.label=master -Deureka.instance.hostname=localhost -Deureka.client.service-url.defaultZone=http://localhost:7020/eureka/
+
+2. IDEA debug/run
+
+   2.1 program argument:
+
+   --port=7060 --mgmt-port=7061 --spring.cloud.config.label=master --eureka.instance.hostname=localhost --eureka.client.service-url.defaultZone=http://localhost:7020/eureka/
+
+   2.2 or system environment
+
+   -Dport=7060 -Dmgmt-port=7061 -Dspring.cloud.config.label=master -Deureka.instance.hostname=localhost -Deureka.client.service-url.defaultZone=http://localhost:7020/eureka/
+
+## Development, Test and Production
+
+Please see run/runZuul.sh

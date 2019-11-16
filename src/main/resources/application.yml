@@ -1,0 +1,178 @@
+spring:
+  application:
+    name: tdoer-gateway
+    admin:
+      enabled: true
+  jackson:
+    date-format: yyyy/MM/dd HH:mm:ss
+    time-zone: GMT+8
+#  zipkin:
+#    enabled: true
+#    rabbitmq:
+#      queue: zipkin
+#  ## spring cloud bus,
+#  rabbitmq:
+#    host: localhost
+#    port: 5672
+#    username: springcloud
+#    password: spring123
+#    virtual-host: /
+
+## eureka client
+eureka:
+  instance:
+    hostname: localhos
+    # namespace: enreka
+    appname: ${spring.application.name}
+    prefer-ip-address: true
+    instance-enabled-onit: false
+    ## endpoints
+    home-page-url-path: /
+    health-check-url-path: /management/health
+    status-page-url-path: /management/info
+    ## instance ports open for service consumers
+    # non-secure-port-enabled: true
+    # non-secure-port: 80
+    # secure-port-enabled: false
+    # secure-port: 443
+    ## renew lease
+    lease-expiration-duration-in-seconds: 90
+    lease-renewal-interval-in-seconds: 30
+    metadata-map:
+      user:
+        name: operator
+        password: bboperator!@#
+      management:
+        port: ${management.server.port}
+        context-path: ${management.endpoints.web.base-path}
+  client:
+    ## basic
+    enabled: true
+    allow-redirects: false
+#    region: cn-shanghai
+#    availability-zones:
+#      cn-shanghai: cn-shanghai-b,cn-shanghai-c,cn-shanghai-d
+    service-url:
+      defaultZone: http://localhost:7020/eureka/
+    #  cn-shanghai-b: http://${eureka.peer.hostname}:${eureka.peer.port}/eureka/
+
+    ## register the instance
+    register-with-eureka: true
+
+    ## replicate instance info Eureka server
+    initial-instance-info-replication-interval-seconds: 40
+    instance-info-replication-interval-seconds: 30
+    heartbeat-executor-exponential-back-off-bound: 10
+    heartbeat-executor-thread-pool-size: 2
+    on-demand-update-status-change: true
+
+    ## fetch
+    fetch-registry: true
+    # fetch-remote-regions-registry: cn-shanghai
+    prefer-same-zone-eureka: true
+    filter-only-up-instances: true
+    g-zip-content: true
+    disable-delta: false
+    registry-fetch-interval-seconds: 30
+    use-dns-for-fetching-service-urls: false
+    cache-refresh-executor-thread-pool-size: 2
+    cache-refresh-executor-exponential-back-off-bound: 10
+
+
+    ## connections and timeouts
+    eureka-server-total-connections: 200
+    eureka-server-total-connections-per-host: 50
+    eureka-connection-idle-timeout-seconds: 30
+    eureka-server-connect-timeout-seconds: 5
+    eureka-server-read-timeout-seconds: 8
+
+    ## log
+    log-delta-diff: false
+
+server:
+  port: ${port:7060}
+
+## management
+management:
+  endpoint:
+    shutdown:
+      enabled: true
+    health:
+      show-details: always
+  endpoints:
+    enabled-by-default: true
+    web:
+      base-path: /management
+      exposure:
+        include: "*"
+        exclude: "shutdown"
+    jmx:
+      exposure:
+        include: "*"
+  server:
+    port: ${mgmt-port:7061}
+zuul:
+  ignored-services: "*"
+  routes:
+    login-url:
+      path: /api/login
+      url: forward:/api/login
+    logout-url:
+      path: /api/logout
+      url: forward:/api/logout
+    data:
+      path: /data/**
+      serviceId: common-data
+      stripPrefix: true
+    sms:
+      path: /sms/**
+      serviceId: common-sms
+      stripPrefix: true
+    message:
+      path: /message/**
+      serviceId: common-message
+      stripPrefix: true
+  retryable: true
+  host:
+    connect-timeout-millis: 2000
+    max-per-route-connections: 20
+    max-total-connections: 200
+  add-host-header: true
+  add-proxy-headers: true
+  semaphore:
+    max-semaphores: 100
+  sensitive-headers:
+ribbon:
+  ConnectTimeout: 3001
+  ReadTimeout: 60001
+  eager-load:
+    enabled: true
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 30000
+        readTimeout: 30000
+security:
+  oauth2:
+    # configure service to communicate with authorization service
+    client:
+      # retrieve token from authorization server by authorization code, user password etc.
+      accessTokenUri: http://tdoer-auth/oauth/token
+      # revoke token, DELETE http method
+      revokeTokenUri: http://tdoer-auth/oauth/users/{user}/tokens/{token}
+      # redirect to and ask user to authorize the client
+      userAuthorizationUri: http://auth2dev.tdoer.net/oauth/authorize
+      # clientId/client secret
+      clientAuthenticationScheme: header
+      # token
+      authenticationScheme: header
+      # redirect to and tell authorization server to logout, ie., revoke token
+      authorizationServerLogoutUri: http://auth2dev.tdoer.net/logout
+      # current service's login path
+      loginPath: /login
+      # current service's logout path
+      logoutPath: /logout
+white:
+  url:
+   list: /,/csrf,/swagger-ui**,/webjars/**,/swagger-resources/**,/v2/api-docs**,/menu/**,/buser/getLoginUser,/brand/**,/modelCategory/**,/rsrv/**,/navigation/**
