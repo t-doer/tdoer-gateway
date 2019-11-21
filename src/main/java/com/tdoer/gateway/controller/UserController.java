@@ -70,9 +70,9 @@ public class UserController {
     public GenericResponseData<BaseUser> login(HttpServletResponse response, HttpServletRequest request){
         log.info("Login request from: {}", request.getRequestURL());
 
-        String account = request.getParameter("account");
+        String account = request.getParameter("username");
         String password = request.getParameter("password");
-        Assert.hasText(account, "'account' parameter cannot be blank");
+        Assert.hasText(account, "'username' parameter cannot be blank");
         Assert.hasText(account, "'password' parameter cannot be blank");
 
         loginHandler.login(request, response, account, password);
