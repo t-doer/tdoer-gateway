@@ -38,11 +38,14 @@ import org.springframework.context.annotation.Configuration;
         "com.tdoer.gateway", // local components in the package
         "com.tdoer.interfaces.config", // Feign configuration
         "com.tdoer.delegate.bedrock", // Bedrock service providers
-        "com.tdoer.delegate.token" // ResourceServerRefreshTokenServices
+        "com.tdoer.delegate.token", // ResourceServerRefreshTokenServices
+        "com.tdoer.delegate.user" // UserService
 })
 @EnableFeignClients(basePackages= {
         "com.tdoer.interfaces.bedrock", // Bedrock services to "tdoer-bedrock-serviceprovider"
-        "com.tdoer.interfaces.token" // Toker services to "tdoer-auth"
+        "com.tdoer.interfaces.token", // Toker services to "tdoer-auth"
+        "com.tdoer.interfaces.user" // User service to "tdoer-core-data"
+
 })
 @Configuration
 @EnableZuulProxy
